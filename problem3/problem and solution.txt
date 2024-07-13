@@ -1,0 +1,24 @@
+1. Redundant Calculation in useMemo:
+
+- Issue: getPriority is called multiple times for the same balance within useMemo. This leads to unnecessary recalculations.
+- Improvement: Cache the priority values within useMemo to avoid redundant calls to getPriority.
+
+2. Incorrect Filter Logic:
+
+- Issue: The filter condition if (lhsPriority > -99) { if (balance.amount <= 0) { return true; } } always returns false because lhsPriority is not defined within this scope.
+- Improvement: Correct the filter logic to properly check the balance amount and blockchain priority.
+
+3. State and Effects Dependencies:
+
+- Issue: useMemo depends on prices which is not used within the memoization logic.
+- Improvement: Remove unnecessary dependencies from useMemo.
+
+4. Mapping and Sorting Outside of Memoization:
+
+- Issue: Mapping sortedBalances to formattedBalances and rows outside useMemo causes these to be recalculated on every render.
+- Improvement: Include the mapping logic within useMemo to ensure that it only recalculates when dependencies change.
+
+5. Potential Performance Issues with useMemo:
+
+- Issue: The sorting logic within useMemo can be optimized by avoiding repeated calls to getPriority.
+- Improvement: Simplify the sorting logic by caching priority values
