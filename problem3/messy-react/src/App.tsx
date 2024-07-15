@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useMemo } from "react";
+import "./App.css";
 
 interface WalletBalance {
   currency: string;
@@ -16,20 +18,32 @@ interface Props {
 
 const App: React.FC<Props> = (props: Props) => {
   const { className } = props;
-  const balances: WalletBalance[] = []; // Placeholder for useWalletBalances()
-  const prices: Record<string, number> = {}; // Placeholder for usePrices()
+  const balances: WalletBalance[] = [
+    { currency: "BTC", amount: 1.5, blockchain: "Bitcoin" },
+    { currency: "ETH", amount: 10.2, blockchain: "Ethereum" },
+    { currency: "ADA", amount: 500, blockchain: "Cardano" },
+    { currency: "SOL", amount: 25.75, blockchain: "Solana" },
+    { currency: "DOT", amount: 100, blockchain: "Polkadot" },
+  ];
+  const prices: Record<string, number> = {
+    BTC: 50000,
+    ETH: 2000,
+    ADA: 1.2,
+    SOL: 30,
+    DOT: 25,
+  };
 
   const getPriority = (blockchain: string): number => {
     switch (blockchain) {
-      case 'Osmosis':
+      case "Bitcoin":
         return 100;
-      case 'Ethereum':
+      case "Ethereum":
         return 50;
-      case 'Arbitrum':
+      case "Cardano":
         return 30;
-      case 'Zilliqa':
+      case "Solana":
         return 20;
-      case 'Neo':
+      case "Polkadot":
         return 20;
       default:
         return -99;
@@ -49,23 +63,25 @@ const App: React.FC<Props> = (props: Props) => {
       })
       .map((balance: WalletBalance) => ({
         ...balance,
-        formatted: balance.amount.toFixed()
+        formatted: balance.amount.toFixed(2),
       }));
   }, [balances]);
 
-  const rows = sortedBalances.map((balance: FormattedWalletBalance, index: number) => {
-    const usdValue = prices[balance.currency] * balance.amount;
-    return (
-      <div key={index}>
-        <p>Currency: {balance.currency}</p>
-        <p>Amount: {balance.amount}</p>
-        <p>Formatted: {balance.formatted}</p>
-        <p>USD Value: {usdValue}</p>
-      </div>
-    );
-  });
+  const rows = sortedBalances.map(
+    (balance: FormattedWalletBalance, index: number) => {
+      const usdValue = prices[balance.currency] * balance.amount;
+      return (
+        <div key={index} className="wallet-card">
+          <p>Currency: {balance.currency}</p>
+          <p>Amount: {balance.amount}</p>
+          <p>Formatted: {balance.formatted}</p>
+          <p>USD Value: {usdValue.toFixed(2)}</p>
+        </div>
+      );
+    }
+  );
 
-  return <div className={className}>{rows}</div>;
+  return <div className={`wallet-container ${className}`}>{rows}</div>;
 };
 
 export default App;
